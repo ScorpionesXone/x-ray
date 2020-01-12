@@ -35,23 +35,24 @@ class MyTestCase(unittest.TestCase):
 
     random.seed(888)
 
-    x1 = Sin.t/DAY
+    x1 = Sin.t
     y1 = Sin.Mdot_in
-    x = np.array(x1)
 
+    x = np.array(x1)
     y = np.array(y1) 
 
 
     err = np.array([random.random() for i in range(len(y))])
+    error = err+4e17
 
-    yB = y + err*4e17
-    yb = y - err*4e17
+    #yB = y + err*4e17
+    #yb = y - err*4e17
 
 
-    with open('test.tsv', "w") as file_result:
-        file_result.write('#tbegin' + ' ' + 'tend' + '\t' + 'dotM' + '\t' + 'b_dotM' + '\t' + 'B_dotM' +  '\n')
-        for i in range(0, len(y)):
-            file_result.write(str(x[i]) + '\t' + str(x[i]) + '\t' + str(y[i]) + '\t' + str(yb[i]) + '\t' + str(yB[i]) +  '\n')
+    #with open('test.tsv', "w") as file_result:
+    #    file_result.write('#tbegin' + ' ' + 'tend' + '\t' + 'dotM' + '\t' + 'b_dotM' + '\t' + 'B_dotM' +  '\n')
+    #    for i in range(0, len(y)):
+    #        file_result.write(str(x[i]) + '\t' + str(x[i]) + '\t' + str(y[i]) + '\t' + str(yb[i]) + '\t' + str(yB[i]) +  '\n')
 
 
     params = Parameters()
@@ -61,7 +62,7 @@ class MyTestCase(unittest.TestCase):
     params.add('x0', min= 1.0, value = 3.5, max = 5.0)
     params['x0'].vary = False
 
-    Burst = fit('wind no tidal', path='test.tsv')
+    Burst = fitnp(params, x, y, error, 'wind no tidal')
 
 
     Dalpha = Burst.params['alpha'].value
