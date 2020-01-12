@@ -21,15 +21,22 @@ import module
 def Minimum():
     """Function to be minimize the data"""
 
-    out = fit('wind no tidal', path=pat)
+    params = Parameters()
+    params.add('rout', min= 1e11, value = 1.7e11, max = 2e11)
+    params.add('alpha', min = 0.1, value = 0.8, max = 1.0)
+    params.add('Mdotin', min = 1e18, value = 1e19, max = 1.5e19)
+    params.add('x0', min= 1.0, value = 3.5, max = 5.0)
+    params['x0'].vary = False
+
+    out = fit(params, 'wind no tidal', path=pat)
     out.params
 
     params['rout'].vary = False
 
-    ouT = fit('wind and tidal', path=pat)
+    ouT = fit(params, 'wind and tidal', path=pat)
     ouT.params
 
-    ouT0 = fit('no wind and tidal', path=pat)
+    ouT0 = fit(params, 'no wind and tidal', path=pat)
     ouT0.params
 
     lil = []
